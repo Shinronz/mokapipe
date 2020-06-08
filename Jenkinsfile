@@ -1,8 +1,5 @@
 pipeline{
     agent any
-    options {
-        lock( resource: 'BuildMoka')
-    }
     environment{
         gitCredentials = ''
 
