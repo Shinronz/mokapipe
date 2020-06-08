@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    options {
+        lock( resource: 'BuildMoka')
+    }
     environment{
         gitCredentials = ''
 
@@ -17,6 +20,10 @@ pipeline{
         localDBName = 'GX_KB_Moka'
 
         msbuild = tool name: 'MSBuild'
+        msbuildScript = ".\\Build\\General.msbuild"
+        rebuild = 'false'
+        mains = 'true'
+
     }
     stages{
         stage("Update"){
@@ -30,6 +37,15 @@ pipeline{
                 localKbPath: "${localKbPath}", 
                 localKbVersion: "${localVersion}", 
                 serverURL: "${gxserverURL}"
+            }
+        }
+        stage("Build"){
+            steps{
+                script{
+                    bat label: "Build Moka Environment ${environment}",
+                    script: "\"${msbuild}\\MSBuild.exe\" \"${msbuildScript}\" /t:Build /p:GX_PROGRAM_DIR=\"${gxPath}\" /p:KBPath=\"${localKbPath}\" /p:KBEnvironment==\"${environment}\"
+                    /p:KBVersion==\"${localVersion}\" /p:Rebuild=\"${rebuild}\" /p:Mains=\"${mains}\""
+                }
             }
         }
     }

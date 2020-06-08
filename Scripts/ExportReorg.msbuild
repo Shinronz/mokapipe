@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="CreateDeploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<GX_PROGRAM_DIR Condition=" '$(GX_PROGRAM_DIR)' == '' ">$(MSBuildProjectDirectory)</GX_PROGRAM_DIR>
+	</PropertyGroup>
+
+	<Import Project="$(GX_PROGRAM_DIR)\Imports.targets"/>
+
+	<PropertyGroup>
+		<!--Input Parameters-->
+
+		<!-- Working KB Properties -->
+		<KBPath>C:\Models\SIDEATKB\</KBPath>
+		<KBVersion>SIDEATKB</KBVersion>
+		<KBEnvironment>Testing</KBEnvironment>
+
+		<!-- Deploy Project Properties -->
+		<ProjectName>SideatTesting</ProjectName>
+		<ObjectNames>SideatTesting</ObjectNames>
+
+	</PropertyGroup>
+
+	<Target Name="SelectVersion" Condition="'$(KBVersion)'!=''" >
+		<SetActiveVersion VersionName="$(KBVersion)"  />
+	</Target>
+
+	<Target Name="SelectEnvironment" Condition="'$(KBEnvironment)'!=''">
+		<SetActiveEnvironment EnvironmentName="$(KBEnvironment)" />
+	</Target>
+
+	<Target Name="OpenKB">
+		<Error Condition="'$(KBPath)'==''" Text="KBPath cannot be null" />
+		<Message Text="OpenKnowledgeBase Directory=$(KBPath)" />
+		<OpenKnowledgeBase Directory="$(KBPath)"/>
+	</Target>
+
+	<Target Name="Open" DependsOnTargets="OpenKB;SelectVersion;SelectEnvironment"/>
+
+	<Target Name="CreateDeploy" DependsOnTargets="Open" >
+
+		<PropertyGroup Condition="$(KBPath.EndsWith('\'))">
+			<KBPath>$(KBPath.Substring(0, $([MSBuild]::Subtract($(KBPath.Length), 1))))</KBPath>
+		</PropertyGroup>
+		
+		<PropertyGroup Condition="'$(KBVersion)' == ''">
+			<KBVersion>$(KBPath.Substring($([MSBuild]::Add($(KBPath.LastIndexOf('\')), 1))))</KBVersion>
+		</PropertyGroup>
+
+		<Message Text="KBPath is $(KBPath)"/>
+		<Message Text="KBVersion is $(KBVersion)"/>
+		
+		<ItemGroup>
+			<DeployProperty Include="ApplicationKey">
+				<PropertyValue>$(APPLICATION_KEY)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="SiteKey">
+				<PropertyValue>$(SITE_KEY)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="TargetJRE">
+				<PropertyValue>$(TARGET_JRE)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="DeployTargetTask">
+				<PropertyValue>$(DEPLOY_TARGETS)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="PackageFormat">
+				<PropertyValue>$(PACKAGE_FORMAT)</PropertyValue>
+			</DeployProperty>
+			
+			<DeployProperty Include="DeploymentUnit">
+				<PropertyValue>$(DeploymentUnit)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="DeployTarget">
+				<PropertyValue>$(TargetId)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="ApplicationServer">
+				<PropertyValue>$(ApplicationServer)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="AppName">
+				<PropertyValue>$(AppName)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="KBPath">
+				<PropertyValue>$(KBPath)</PropertyValue>
+			</DeployProperty>
+			<DeployProperty Include="RestSpecFolder">
+				<PropertyValue>$(KBPath)\GXRESTSPC\$(KBVersion)</PropertyValue>
+			</DeployProperty>
+		</ItemGroup>
+
+		<CreateDeployProject ProjectName="$(ProjectName)" ObjectNames="$(ObjectNames)" AdditionalProperies="@(DeployProperty)" SelectedObjectsOnly="$(SelectedObjectsOnly)" >
+			<Output TaskParameter="ProjectFile" PropertyName="ProjectFile"/>
+		</CreateDeployProject>
+
+		<Message Text="Deploy Project created at '$(ProjectFile)'" Condition="'$(ProjectFile)' != '' AND Exists('$(ProjectFile)')"/>
+
+	</Target>
+
+	<Target Name="ExportReorganization" DependsOnTargets="PrepareReorgFiles">
+		<Copy SourceFiles="@(ReorgFile)" DestinationFiles="$(TempDir)\$(RootModuleRelativePath)\%(Filename)%(Extension)" SkipUnchangedFiles="true"/>
+		<Copy SourceFiles="@(ReorgDriver)" DestinationFolder="$(ReorgDestination)" SkipUnchangedFiles="true" Condition="'$(Generator)' == 'Java'"/>
+		<Copy SourceFiles="@(ReorgDriver)" DestinationFolder="$(TempDir)" SkipUnchangedFiles="true" Condition="'$(Generator)' == 'C#' OR '$(Generator)' == '.NET Core'"/>
+	</Target>
+
+</Project>
