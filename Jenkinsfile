@@ -11,7 +11,7 @@ pipeline{
         serverVersion = 'Morfy'
         environment = 'Testing'
         localKbPath = 'C:\\Models\\Moka'
-        localVersion = 'Testing'
+        localVersion = 'Moka'
         envDirectory = 'Testing'
         localSQLServer = 'DESKTOP-C2CJ47T'
         localDBName = 'GX_KB_Moka'
