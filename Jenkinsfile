@@ -20,7 +20,7 @@ pipeline{
         localDBName = 'GX_KB_Moka'
 
         msbuild = tool name: 'MSBuild'
-        msbuildScript = ".\\Build\\General.msbuild"
+        msbuildScript = ".\\Scripts\\Build.msbuild"
         rebuild = 'false'
         mains = 'true'
 
