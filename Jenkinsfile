@@ -43,7 +43,7 @@ pipeline{
             steps{
                 script{
                     bat label: "Build Moka Environment ${environment}",
-                    script: "\"${msbuild}\\MSBuild.exe\" \"${msbuildScript}\" /t:Build /p:GX_PROGRAM_DIR=\"${gxPath}\" /p:KBPath=\"${localKbPath}\" /p:KBEnvironment==\"${environment}\" /p:KBVersion==\"${localVersion}\" /p:Rebuild=\"${rebuild}\" /p:Mains=\"${mains}\""
+                    script: "\"${msbuild}\\MSBuild.exe\" \"${msbuildScript}\" /t:Build /p:GX_PROGRAM_DIR=\"${gxPath}\" /p:KBPath=\"${localKbPath}\" /p:KBEnvironment=\"${environment}\" /p:KBVersion=\"${localVersion}\" /p:Rebuild=\"${rebuild}\" /p:Mains=\"${mains}\""
                 }
                 script{
                     bat label: "Create GXJenkinsFile",
