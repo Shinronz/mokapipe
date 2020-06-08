@@ -22,14 +22,14 @@ pipeline{
         stage("Update"){
             steps{
                 gxserver changelog: true, poll: true,
-                credentialsId: "&{credId}", 
-                gxInstallationId: "&{genexusId}", 
-                kbDbServerInstance: "&{localSQLServer}",
-                kbName: "&{serverKB}", 
-                kbVersion: "&{serverVersion}", 
-                localKbPath: "&{localKbPath}", 
-                localKbVersion: "&{localVersion}", 
-                serverURL: "&{gxserverURL}"
+                credentialsId: "${credId}", 
+                gxInstallationId: "${genexusId}", 
+                kbDbServerInstance: "${localSQLServer}",
+                kbName: "${serverKB}", 
+                kbVersion: "${serverVersion}", 
+                localKbPath: "${localKbPath}", 
+                localKbVersion: "${localVersion}", 
+                serverURL: "${gxserverURL}"
             }
         }
     }
