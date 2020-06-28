@@ -16,7 +16,7 @@ pipeline{
         localKbPath = 'C:\\Models\\Moka'
         localVersion = 'Moka'
         envDirectory = 'Testing'
-        localSQLServer = 'DESKTOP-C2CJ47T'
+        localSQLServer = 'DESKTOP-6VIJUBL'
         localDBName = 'GX_KB_Moka'
 
         msbuild = tool name: 'MSBuild'
