@@ -7,20 +7,6 @@
 
 	<Import Project="$(GX_PROGRAM_DIR)\Imports.targets"/>
 
-	<PropertyGroup>
-		<!--Input Parameters-->
-
-		<!-- Working KB Properties -->
-		<KBPath>C:\Models\SIDEATKB\</KBPath>
-		<KBVersion>SIDEATKB</KBVersion>
-		<KBEnvironment>Testing</KBEnvironment>
-
-		<!-- Deploy Project Properties -->
-		<ProjectName>SideatTesting</ProjectName>
-		<ObjectNames>SideatTesting</ObjectNames>
-
-	</PropertyGroup>
-
 	<Target Name="SelectVersion" Condition="'$(KBVersion)'!=''" >
 		<SetActiveVersion VersionName="$(KBVersion)"  />
 	</Target>
